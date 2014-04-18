@@ -1,15 +1,6 @@
 # Koha-Contrib-Mirabel
 
 
-## Synopsys
-
-```bash
-koha-mirabel sync
-koha-mirabel sync --doit
-koha-mirabel sync --doit --noverbose
-koha-mirabel clean
-```
-
 ## Description
 
 Ce programme synchronise la base d'information Mir@bel avec un Catalogue Koha.
@@ -17,16 +8,35 @@ Il agit comme un client des services web de Mir@bel. Les informations sont
 retrouvées dans Mir@bel et reportées dans les notices bibliographiques Koha
 de périodique.
 
+## Synopsys
+
+```sh
+koha-mirabel sync
+koha-mirabel sync --doit
+koha-mirabel sync --doit --noverbose
+koha-mirabel clean
+```
+
+## Installation
+
+Sur un serveur Koha, installez le paquet `Koha::Contrib::Mirabel` :
+
+```sh
+cpan Koha::Contrib::Mirabel
+```
+
+## Configuration
+
 Le programme accède à une instance de Koha au moyen des variables
 d'environnement habituelles : **KOHA_CONF** et **PERL5LIB**. Deux préférences
 systèmes sont nécessaires : 
 
-* **MirabelPartenaire** -- Contient le numéro de partenaire Mir@bel. Ce numéro
+* **MirabelPartenaire** - Contient le numéro de partenaire Mir@bel. Ce numéro
 est utilisé pour obtenir la liste des revues du partenaire dans Mir@bel.
-* **MirabelTag** -- Le tag de la zone MARC dans laquelle les info Mir@bel sont
+* **MirabelTag** - Le tag de la zone MARC dans laquelle les info Mir@bel sont
 recopiées.
 
-### Synchronisation
+## Synchronisation
 
 La synchronisation consiste à interroger Mir@bel afin d'obtenir la liste des
 info relatives aux revues du partenaire. À chaque revue est associée une liste
@@ -96,7 +106,7 @@ APRÈS:
 999    $c 82146 $d 82146
 ```
 
-### Nettoyage
+## Nettoyage
 
 La tâche de nettoyage interroge Mir@bel pour obtenir la liste des identifiants
 des services qui ont été supprimés depuis un an. Ces identifiants sont
@@ -157,7 +167,7 @@ APRÈS
 999    $c 81935 $d 81935
 ```
 
-### Automatisation
+## Automatisation
 
 Les opérations de synchronisation-nettoyage peuvent être programmées sur un serveur Linux au moyen d'entrées dans le crontab. Par exemple, pour une synchro quotidienne à 2h15 et un nettoyage hebdomadaire, on peut avoir ceci :
 

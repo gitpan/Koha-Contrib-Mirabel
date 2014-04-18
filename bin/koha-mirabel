@@ -2,7 +2,7 @@
 
 
 package Main;
-$Main::VERSION = '0.0.1';
+$Main::VERSION = '0.0.2';
 use Modern::Perl;
 use Koha::Contrib::Mirabel;
 use Getopt::Long;
@@ -10,13 +10,13 @@ use Getopt::Long;
 
 binmode(STDOUT, ':encoding(utf8)');
 
-my ($doit, $verbose) = (0, 0, 1);
+my ($doit, $verbose) = (0, 1);
 GetOptions( 
     'doit'     => \$doit,
     'verbose!' => \$verbose,
 );
 
-my $mirabel = Koha::Mirabel->new( verbose => $verbose, doit => $doit );
+my $mirabel = Koha::Contrib::Mirabel->new( verbose => $verbose, doit => $doit );
 
 for (@ARGV) {
     $mirabel->sync() if /sync/;
@@ -35,7 +35,7 @@ Main
 
 =head1 VERSION
 
-version 0.0.1
+version 0.0.2
 
 =head1 AUTHOR
 

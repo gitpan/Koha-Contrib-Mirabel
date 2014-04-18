@@ -1,5 +1,9 @@
 Revision history for Perl module koha-mirabel
 
+0.0.2 2014-04-18
+
+  - Fix bug lancement exécutable
+
 0.0.1 2014-04-17
 
   - First release
