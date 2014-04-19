@@ -1,12 +1,20 @@
 # Koha-Contrib-Mirabel
 
+Mir@bel référence une liste de plus de deux milles revues pour lesquelles des
+*services* en-ligne sont signalés. Ces *services* sont des URL donnant accès à
+des contenus de quatre types différents : texte intégral, sommaires, résumés et
+indexation. La période de publication de la revue couverte par chaque service,
+ainsi que les lacunes et les condtions d'accès sont fournies avec le service.
 
-## Description
+Mir@bel est géré par un réseau de **partenaires**. Ce sont les bibliothèques et
+centres de documentation qui sont autorisés à mettre à jour Mir@bel et à
+récupérer localement les informations de Mir@bel au moyen de services web.
 
-Ce programme synchronise la base d'information Mir@bel avec un Catalogue Koha.
-Il agit comme un client des services web de Mir@bel. Les informations sont
-retrouvées dans Mir@bel et reportées dans les notices bibliographiques Koha
-de périodique.
+Le programme **koha-mirabel** synchronise la base d'information Mir@bel avec un
+Catalogue Koha. Il agit comme un client des services web de Mir@bel. Les
+informations sont retrouvées dans Mir@bel et reportées dans les notices
+bibliographiques Koha de périodique.
+
 
 ## Synopsys
 
@@ -15,6 +23,7 @@ koha-mirabel sync
 koha-mirabel sync --doit
 koha-mirabel sync --doit --noverbose
 koha-mirabel clean
+koha-mirabel fullclean
 ```
 
 ## Installation
@@ -35,6 +44,7 @@ systèmes sont nécessaires :
 est utilisé pour obtenir la liste des revues du partenaire dans Mir@bel.
 * **MirabelTag** - Le tag de la zone MARC dans laquelle les info Mir@bel sont
 recopiées.
+
 
 ## Synchronisation
 
@@ -167,9 +177,31 @@ APRÈS
 999    $c 81935 $d 81935
 ```
 
+## Nettoyage complet
+
+Alternativement au nettoyage précédent, il est possible de réaliser un
+nettoyage complet. Cela consiste à supprimer de toutes les notices de
+périodique du Catalogue Koha tous les champs *MirabelTag*. Cette opération ne
+nécessite pas d'interroger les services web Mir@bel. Le traitement n'est
+effectif que si le paramètre `--doit` est fourni. Sans le paramètre
+`--noverbose`, les notices avant/après modification sont affichées.
+
+Par exemple :
+
+```sh
+koha-mirabel fullclean
+```
+
+affiche ceci :
+
+```text
+```
+
 ## Automatisation
 
-Les opérations de synchronisation-nettoyage peuvent être programmées sur un serveur Linux au moyen d'entrées dans le crontab. Par exemple, pour une synchro quotidienne à 2h15 et un nettoyage hebdomadaire, on peut avoir ceci :
+Les opérations de synchronisation-nettoyage peuvent être programmées sur un
+serveur Linux au moyen d'entrées dans le crontab. Par exemple, pour une synchro
+quotidienne à 2h15 et un nettoyage hebdomadaire, on peut avoir ceci :
 
 ```crontab
 # Mir@bel
@@ -179,7 +211,10 @@ Les opérations de synchronisation-nettoyage peuvent être programmées sur un s
 
 ## Affichage
 
-Une fois les info de Mir@bel remontées dans les notices d'un Catalogue Koha, il faut les afficher. A cet effet, il faut modifier la feuille de style de la page de détail de l'OPAC. Par exemple, pour afficher toutes les URL de Mir@bel, on peut avoir cela :
+Une fois les info de Mir@bel remontées dans les notices d'un Catalogue Koha, il
+faut les afficher. A cet effet, il faut modifier la feuille de style de la page
+de détail de l'OPAC. Par exemple, pour afficher toutes les URL de Mir@bel, on
+peut avoir cela :
 
 ```xsl
 <xsl:if test="marc:datafield[@tag='901']">
@@ -241,6 +276,18 @@ Une fois les info de Mir@bel remontées dans les notices d'un Catalogue Koha, il
 </xsl:template>
 ```
 
+## Développement
+
+Il est possible de participer au développement de ce programme ou d'en faire
+fonctionner une version modifiée localement. À cet effet, il faut cloner le
+dépôt Git de `Koha::Contrib::Mirabel`, puis rendre accessible l'exécutable
+`koha-mirabel` ainsi que le module Perl associé au moyen des variables
+d'environnement suivantes : 
+
+```sh
+EXPORT PATH=<koha-mirabel-root>/bin:$PATH
+EXPORT PERL5LIB=<koha_mirabel_root>/lib:$PERL5LIB
+```
 
 ## Copyright et license
 

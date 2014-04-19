@@ -26,4 +26,6 @@ requires:
   XML::Simple: '0'
   YAML: '0'
   utf8: '0'
-version: 0.0.2
+resources:
+  repository: http://git.tamil.fr/git/Koha-Contrib-Mirabel
+version: 0.0.3

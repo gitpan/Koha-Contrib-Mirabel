@@ -1,5 +1,5 @@
 package Koha::Contrib::Mirabel;
-$Koha::Contrib::Mirabel::VERSION = '0.0.2';
+$Koha::Contrib::Mirabel::VERSION = '0.0.3';
 # ABSTRACT: Synchronise un catalogue Koha avec Mir@bel
 use Moose;
 
@@ -121,6 +121,23 @@ sub sync {
 
 
 
+sub all_bibs {
+    my $tag = shift->tag;
+    my $query =
+        "SELECT biblionumber " .
+        "FROM   biblioitems " .
+        "WHERE  ExtractValue(marcxml,'//datafield[\@tag=$tag]/subfield[\@code]')";
+    my $st = C4::Context->dbh->prepare($query);
+    $st->execute;
+    my @bibs;
+    while (my ($biblionumber) = $st->fetchrow ) {
+        push @bibs, $biblionumber;
+    }
+    return \@bibs;
+}
+    
+
+
 sub clean {
     my $self = shift;
 
@@ -138,24 +155,10 @@ sub clean {
     my %is_removed_id = map { $_ => 1 } @ids;
     say "Services supprimés : ", join(', ', @ids), "\n" if $self->verbose;
 
-    # Récupération des biblionumbers des notices utilisant au moins un des
-    # services supprimés
-    my $tag = $self->tag;
-    my $query =
-        "SELECT biblionumber " .
-        "FROM   biblioitems " .
-        "WHERE  ExtractValue(marcxml,'//datafield[\@tag=$tag" .
-        "]/subfield[\@code]')";
-    my $st = C4::Context->dbh->prepare($query);
-    $st->execute;
-    my @bibs;
-    while (my ($biblionumber) = $st->fetchrow ) {
-        push @bibs, $biblionumber;
-    }
-    
     # Modification des notices contenant un service supprimé
     my $found = 0;
-    for my $biblionumber (@bibs) {
+    my $tag = $self->tag;
+    for my $biblionumber (@{$self->all_bibs}) {
         my $record = GetMarcBiblio($biblionumber);
         $record = MARC::Moose::Record::new_from($record, 'Legacy');
         my $has_id = 0;
@@ -190,6 +193,31 @@ sub clean {
         if !$found && $self->verbose;
 }
 
+
+sub full_clean {
+    my $self = shift;
+
+    if ($self->verbose) {
+        say "Suppression dans Koha de tous les champs Mir\@bel";
+        say "** TEST **" unless $self->doit;
+    }
+
+    for my $biblionumber (@{$self->all_bibs}) {
+        my $record = GetMarcBiblio($biblionumber);
+        $record = MARC::Moose::Record::new_from($record, 'Legacy');
+        next unless $record->field($self->tag); # Impossible normalement...
+        say '_' x 40, " #$biblionumber";
+        print $record->as('Text') if $self->verbose;
+        $record->delete( $self->tag );
+        print "APRÈS\n", $record->as('Text') if $self->verbose;
+        if ( $self->doit ) {
+            $record = $record->as('Legacy');
+            ModBiblioMarc( $record, $biblionumber, GetFrameworkCode($biblionumber) );
+        }
+    }
+}
+
+
 __PACKAGE__->meta->make_immutable;
 1;
 
@@ -205,7 +233,7 @@ Koha::Contrib::Mirabel - Synchronise un catalogue Koha avec Mir@bel
 
 =head1 VERSION
 
-version 0.0.2
+version 0.0.3
 
 =head1 ATTRIBUTES
 
@@ -234,10 +262,19 @@ Effecture réellement les traitements de mise à jour du Catalogue Koha. Par dé
 
 Synchronise le Catalogue Koha avec les info de Mir@bel.
 
+=head2 all_bibs
+
+Retourne un ArrayRef des biblionumbers des notices ayant au moins un service
+Mir@bel dans MirabelTag
+
 =head2 clean
 
 Nettoie les notices du Catalogue Koha des info Mir@bel qui ont été supprimées
 de Mir@bel depuis 1 an.
+
+=head2 full_clean
+
+Supprime tous les champs MirabelTag des notices du Catalogue Koha.
 
 =head1 AUTHOR
 
