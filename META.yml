@@ -13,7 +13,6 @@ meta-spec:
   version: '1.4'
 name: Koha-Contrib-Mirabel
 requires:
-  C4::Biblio: '0'
   DateTime: '0'
   FindBin: '0'
   Getopt::Long: '0'
@@ -27,5 +26,5 @@ requires:
   YAML: '0'
   utf8: '0'
 resources:
-  repository: http://git.tamil.fr/git/Koha-Contrib-Mirabel
-version: 0.0.3
+  repository: https://github.com/fredericd/Koha-Contrib-Mirabel
+version: 0.0.4

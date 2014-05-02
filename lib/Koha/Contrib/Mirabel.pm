@@ -1,5 +1,5 @@
 package Koha::Contrib::Mirabel;
-$Koha::Contrib::Mirabel::VERSION = '0.0.3';
+$Koha::Contrib::Mirabel::VERSION = '0.0.4';
 # ABSTRACT: Synchronise un catalogue Koha avec Mir@bel
 use Moose;
 
@@ -233,7 +233,7 @@ Koha::Contrib::Mirabel - Synchronise un catalogue Koha avec Mir@bel
 
 =head1 VERSION
 
-version 0.0.3
+version 0.0.4
 
 =head1 ATTRIBUTES
 

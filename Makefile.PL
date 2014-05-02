@@ -23,7 +23,6 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Koha::Contrib::Mirabel",
   "PREREQ_PM" => {
-    "C4::Biblio" => 0,
     "DateTime" => 0,
     "FindBin" => 0,
     "Getopt::Long" => 0,
@@ -38,7 +37,7 @@ my %WriteMakefileArgs = (
     "utf8" => 0
   },
   "TEST_REQUIRES" => {},
-  "VERSION" => "0.0.3",
+  "VERSION" => "0.0.4",
   "test" => {
     "TESTS" => ""
   }
@@ -46,7 +45,6 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "C4::Biblio" => 0,
   "DateTime" => 0,
   "FindBin" => 0,
   "Getopt::Long" => 0,

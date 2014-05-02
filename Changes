@@ -1,5 +1,10 @@
 Revision history for Perl module koha-mirabel
 
+0.0.4 2014-05-02
+
+  - Fix bug install dependency to C4::Biblio
+  - Link to Mir@bel web site
+
 0.0.3 2014-04-19
 
   - Ajout option fullclean
